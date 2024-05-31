@@ -28,6 +28,9 @@ async function StartWriteConsumptions() {
 
             client.subscribe('/devices/wb-map3e_69/controls/Irms L1', function (err, device) {
             })
+
+            client.subscribe('/devices/wb-map3e_69/controls/Urms L1', function (err, device) {
+            })
         });
 
         client.on('message', function (topic, message) {
@@ -41,6 +44,13 @@ async function StartWriteConsumptions() {
             if (topic.toString() == '/devices/wb-map3e_69/controls/Irms L1') {
                 countVoltage++;
                 sumVoltage += parseFloat(message.toString());
+            }
+
+            // Get volts
+            if(topic.toString() == '/devices/wb-map3e_69/controls/Urms L1') {
+                if(parseFloat(message.toString()) < 207 || parseFloat(message.toString()) > 253) {
+
+                }
             }
         });
 

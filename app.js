@@ -5,6 +5,7 @@ const { Test } = require('./test');
 const { checkActiveDevices } = require('./checkActiveDevices');
 const { getConsumptions } = require('./getConsumptions');
 const cors = require('./cors');
+const { HighVolt } = require('./highVolts');
 
 const prisma = new PrismaClient()
 
@@ -36,4 +37,8 @@ app.get('/devices', async (req, res) => {
 app.get('/devices/active', (req, res) => {
     // checkActiveDevice(req, res);
     checkActiveDevices(req, res);
+});
+
+app.get('/high-volts', async (req, res) => {
+    HighVolt(req, res);
 });
