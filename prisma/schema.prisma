@@ -14,9 +14,10 @@ datasource db {
 }
 
 model Device {
-  id          Int           @id @default(autoincrement())
-  title       String        @unique
-  Consumption Consumption[]
+  id             Int              @id @default(autoincrement())
+  title          String           @unique
+  Consumption    Consumption[]
+  DeviceActivity DeviceActivity[]
 }
 
 model Consumption {
@@ -28,4 +29,11 @@ model Consumption {
   sumPower   Float
   sumVoltage Float
   created_at DateTime @default(now())
+}
+
+model DeviceActivity {
+  id         Int      @id @default(autoincrement())
+  deviceId   Int
+  device     Device   @relation(fields: [deviceId], references: [id])
+  entry_date DateTime @default(now())
 }

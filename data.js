@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
 const { PrismaClient } = require('@prisma/client');
-const { CheckDevice } = require('./checkDevice');
+const { CheckDevice, CheckDevices } = require('./checkDevice');
 const prisma = new PrismaClient()
 
 // Variables for calculations
@@ -10,7 +10,7 @@ let sumPower = 0;
 let countVoltage = 0;
 let sumVoltage = 0;
 
-async function StartWriteConsumptions() {
+async function StartWriteConsumptions(req, res) {
     try {
         // Connect to MQTT broker
         var client = mqtt.connect("mqtt://192.168.30.1");
@@ -49,7 +49,7 @@ async function StartWriteConsumptions() {
             // Get volts
             if(topic.toString() == '/devices/wb-map3e_69/controls/Urms L1') {
                 if(parseFloat(message.toString()) < 207 || parseFloat(message.toString()) > 253) {
-
+                    res.json({ success: false, message: "Voltage out of range" });
                 }
             }
         });
@@ -93,7 +93,22 @@ async function createData() {
             }
         })
 
-        console.log("Consumption saved!", consumptionData);
+        console.log("Consumption saved!", consumptionData);        
+    }
+
+    // Check, what the devices are?
+    devicesIds = CheckDevices(consumption.power);
+
+    if(devicesIds.length > 0) {
+        devicesIds.forEach(async deviceId => {
+            const deviceActivity = await prisma.deviceActivity.create({
+                data: {
+                    deviceId: deviceId,
+                }
+            });
+
+            console.log("Device activity saved!", deviceActivity);
+        });
     }
 
     countPower = 0;

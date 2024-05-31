@@ -20,6 +20,7 @@ async function checkActiveDevices(req, res) {
             }
             else {
                 res.json({ success: false, message: "No devices" });
+                return;
             }
 
             countPower = 0;
