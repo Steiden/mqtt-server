@@ -28,7 +28,7 @@ function CheckDevices(power) {
         return [1, 2];
     else if (power > 32 && power < 45)  // Ventilyator
         return [2];
-    else if (power > 4 && power < 15)   // Lampa
+    else if (power > 2 && power < 15)   // Lampa
         return [1];
     else
         return [];
